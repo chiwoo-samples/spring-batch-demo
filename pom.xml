@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>example.chiwoo</groupId>
-    <artifactId>kotlin-batch-demo</artifactId>
+    <artifactId>spring-batch-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>kotlin-batch-demo</name>
+    <name>spring-batch-demo</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>11</java.version>
