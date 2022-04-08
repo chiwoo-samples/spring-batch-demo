@@ -52,8 +52,8 @@ java -jar target/spring-batch-demo-0.0.1-SNAPSHOT.jar --job.names=helloListenerJ
 ```
 
 ### Hello Sequential
-HelloSequentialJobConfig 는 step1 -> step2 -> step3 작업 단위 순서로 배치 프로세스를 실행 합니다.  
-helloListenerJob 에는 2 개의 step 이 순차적으로 처리 됩니다.
+HelloSequentialJobConfig 는 step1 -> step2 -> step3 작업이 순차적으로 실행 합니다.  
+
 - [HelloSequentialJobConfig.kt](./src/main/kotlin/example/chiwoo/demo/jobs/hello04/HelloSequentialJobConfig.kt) 배치 잡 정의
 - [Hello04SequentialJobTest.kt](./src/test/kotlin/example/chiwoo/demo/jobs/Hello04SequentialJobTest.kt) 단위 테스트
 - 콘솔에서 실행
@@ -71,7 +71,7 @@ Case1) step1 의 처리 결과가 '성공'인 경우
 Case2) step1 의 처리 결과가 '실패'인 경우
   step1 -> step4      
 ```
-helloListenerJob 에는 2 개의 step 이 순차적으로 처리 됩니다.
+- 
 - [HelloConditionalJobConfig.kt](./src/main/kotlin/example/chiwoo/demo/jobs/hello05/HelloConditionalJobConfig.kt) 배치 잡 정의
 - [Hello05ConditionalJobTest.kt](./src/test/kotlin/example/chiwoo/demo/jobs/Hello05ConditionalJobTest.kt) 단위 테스트
 - 콘솔에서 실행
