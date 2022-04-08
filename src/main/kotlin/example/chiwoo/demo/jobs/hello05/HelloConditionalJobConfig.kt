@@ -1,53 +1,41 @@
-package example.chiwoo.demo.jobs.hellocondition
+package example.chiwoo.demo.jobs.hello05
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import example.chiwoo.demo.jobs.JobLogger
 import org.springframework.batch.core.ExitStatus
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.JobScope
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory
-import org.springframework.batch.core.configuration.annotation.StepScope
 import org.springframework.batch.core.launch.support.RunIdIncrementer
 import org.springframework.batch.repeat.RepeatStatus
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-/**
- * 정상인경우 Step1 > Step2 > Step3
- * Step1 이 실패할 경우 Step4
- */
 @Configuration
 class HelloConditionalJobConfig(
     val jobBuilderFactory: JobBuilderFactory,
     val stepBuilderFactory: StepBuilderFactory,
 ) {
 
-    companion object {
-        val log: Logger = LoggerFactory.getLogger(javaClass)
-    }
-
     @Bean
     @JobScope
-    fun conditionalStep1(@Value("#{jobParameters['processorNo']}") prcNo: String?): Step {
+    fun conditionalStep1(@Value("#{jobParameters['answer']}") answer: String?): Step {
         return stepBuilderFactory
             .get("conditionalStep1")
             .tasklet { contribution, chunkContext ->
-                log.info("conditionalStep1-task")
-
-                log.info("prcNo: {}", prcNo)
-                var processorNo: Int? = null
-                if (prcNo == null) {
-                    processorNo =
-                        (chunkContext.stepContext.jobParameters.getOrDefault("processorNo", "1") as String).toInt()
+                JobLogger.log.info("conditionalStep1-task")
+                var value: Int? = null
+                if (answer == null) {
+                    value =
+                        (chunkContext.stepContext.jobParameters.getOrDefault("answer", "1") as String).toInt()
                 } else {
-                    processorNo = prcNo.toInt()
+                    value = answer.toInt()
                 }
 
-                log.info("processorNo: {}", processorNo)
-                if ((processorNo!! % 2) == 0) {
+                JobLogger.log.info("answer: {}", value)
+                if ((value!! % 2) == 0) {
                     contribution.exitStatus = ExitStatus.FAILED
                 }
                 RepeatStatus.FINISHED
@@ -61,7 +49,7 @@ class HelloConditionalJobConfig(
         return stepBuilderFactory
             .get("conditionalStep2")
             .tasklet { contribution, chunkContext ->
-                log.info("conditionalStep2-task")
+                JobLogger.log.info("conditionalStep2-task")
                 RepeatStatus.FINISHED
             }
             .build()
@@ -73,7 +61,7 @@ class HelloConditionalJobConfig(
         return stepBuilderFactory
             .get("conditionalStep3")
             .tasklet { contribution, chunkContext ->
-                log.info("conditionalStep3-task")
+                JobLogger.log.info("conditionalStep3-task")
                 RepeatStatus.FINISHED
             }
             .build()
@@ -85,7 +73,7 @@ class HelloConditionalJobConfig(
         return stepBuilderFactory
             .get("conditionalStep4")
             .tasklet { contribution, chunkContext ->
-                log.info("conditionalStep4-task")
+                JobLogger.log.info("conditionalStep4-task")
                 RepeatStatus.FINISHED
             }
             .build()

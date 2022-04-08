@@ -1,7 +1,6 @@
-package example.chiwoo.demo.jobs.hellosequential
+package example.chiwoo.demo.jobs.hello04
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import example.chiwoo.demo.jobs.JobLogger
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
@@ -15,20 +14,16 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class HelloSequentialJobConfig(
     val jobBuilderFactory: JobBuilderFactory,
-    val stepBuilderFactory: StepBuilderFactory
+    val stepBuilderFactory: StepBuilderFactory,
 ) {
 
-    companion object {
-        val log: Logger = LoggerFactory.getLogger(javaClass)
-    }
-
     @Bean
     @JobScope
-    fun firstStep(): Step {
+    fun hello04Step01(): Step {
         return stepBuilderFactory
-            .get("firstStep")
+            .get("hello04Step01")
             .tasklet { contribution, chunkContext ->
-                log.info("firstStep-task")
+                JobLogger.log.info("firstStep-task")
                 RepeatStatus.FINISHED
             }
             .build()
@@ -36,11 +31,11 @@ class HelloSequentialJobConfig(
 
     @Bean
     @JobScope
-    fun secondStep(): Step {
+    fun hello04Step02(): Step {
         return stepBuilderFactory
-            .get("secondStep")
+            .get("hello04Step02")
             .tasklet { contribution, chunkContext ->
-                log.info("secondStep-task")
+                JobLogger.log.info("secondStep-task")
                 RepeatStatus.FINISHED
             }
             .build()
@@ -48,11 +43,11 @@ class HelloSequentialJobConfig(
 
     @Bean
     @JobScope
-    fun thirdStep(): Step {
+    fun hello04Step03(): Step {
         return stepBuilderFactory
-            .get("thirdStep")
+            .get("hello04Step03")
             .tasklet { contribution, chunkContext ->
-                log.info("thirdStep-task")
+                JobLogger.log.info("thirdStep-task")
                 RepeatStatus.FINISHED
             }
             .build()
@@ -60,15 +55,15 @@ class HelloSequentialJobConfig(
 
     @Bean
     fun helloSequentialJob(
-        firstStep: Step,
-        secondStep: Step,
-        thirdStep: Step
+        hello04Step01: Step,
+        hello04Step02: Step,
+        hello04Step03: Step,
     ): Job {
         return jobBuilderFactory.get("helloSequentialJob")
             .incrementer(RunIdIncrementer())
-            .start(firstStep)
-            .next(secondStep)
-            .next(thirdStep)
+            .start(hello04Step01)
+            .next(hello04Step02)
+            .next(hello04Step03)
             .build()
     }
 }

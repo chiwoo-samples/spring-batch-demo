@@ -1,10 +1,10 @@
-package example.chiwoo.demo.jobs.hello
+package example.chiwoo.demo.jobs.hello02
 
+import example.chiwoo.demo.jobs.JobLogger
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory
-import org.springframework.batch.core.configuration.annotation.StepScope
 import org.springframework.batch.core.launch.support.RunIdIncrementer
 import org.springframework.batch.item.ItemProcessor
 import org.springframework.batch.item.ItemReader
@@ -13,11 +13,12 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class HelloJobConfig(
-    val jobBuilderFactory: JobBuilderFactory, val stepBuilderFactory: StepBuilderFactory,
+class HelloSecondJobConfig(
+    val jobBuilderFactory: JobBuilderFactory,
+    val stepBuilderFactory: StepBuilderFactory,
 ) {
 
-    fun helloWorldItemReader(): ItemReader<String> {
+    fun stringArrayItemReader(): ItemReader<String> {
         return object : ItemReader<String> {
 
             private val STRING_VALUES = listOf(
@@ -42,22 +43,21 @@ class HelloJobConfig(
     }
 
     @Bean
-    @StepScope
-    fun step1(): Step {
+    fun helloSecondStep(): Step {
         return stepBuilderFactory
-            .get("step1")
+            .get("helloSecondStep")
             .chunk<String, String>(3)
-            .reader(helloWorldItemReader())
+            .reader(stringArrayItemReader())
             .processor(ItemProcessor<String, String> { value -> value.uppercase() })
-            .writer(ItemWriter<String> { value -> println(value) })
+            .writer(ItemWriter<String> { v -> JobLogger.log.info("{}", v) })
             .build()
     }
 
     @Bean
-    fun helloJob(step1: Step): Job {
-        return jobBuilderFactory.get("helloJob")
+    fun helloSecondJob(helloSecondStep: Step): Job {
+        return jobBuilderFactory.get("helloSecondJob")
             .incrementer(RunIdIncrementer())
-            .flow(step1).end()
+            .flow(helloSecondStep).end()
             .build()
     }
 

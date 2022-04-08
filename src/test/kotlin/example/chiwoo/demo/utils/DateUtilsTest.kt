@@ -13,6 +13,7 @@ class DateUtilsTest {
 
     @Test
     fun test_localDtmToString() {
+        log.info("DateUtils.currentDtmToString: {}", DateUtils.currentDtmToString)
         log.info("DateUtils.localDtmToString: {}", DateUtils.localDtmToString(LocalDateTime.now()))
     }
 }
